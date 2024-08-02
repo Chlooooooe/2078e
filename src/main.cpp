@@ -41,9 +41,10 @@ void competition_initialize() {
 
 void autonomous() {
 	
-	ringRushBlue();
+	// ringRushBlue();
 	// ringRushRed();
-	// soloWP();
+	soloWPBlue();
+	// soloWPRed();
 	// mogoRush();
 }
 

@@ -40,26 +40,27 @@ void op(double drive_scale) {
 				}
 				if (detected){
 					chain_count++;
-					chain.move(-127);
+					chain.move(-100);
 					
 				} else{
-					chain.move(127);
+					chain.move(100);
 				}
 				if(chain_count > 400){
 					chain_count = 0;
 					detected = false;
 				}
 			} else{
-				chain.move(127);
+				chain.move(100);
 			}
 			intake.move(127);
 		} else if (cntrl.get_digital(DIGITAL_L2)) {
 			intake.move(-127);
-			chain.move(-127);
+			chain.move(-100);
 		} else {
 			intake.move(0);
 			chain.move(0);
 		}
+
 		
 		// clamp
 		if (cntrl.get_digital(DIGITAL_DOWN)) {

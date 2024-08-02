@@ -74,8 +74,10 @@ void mogoRush(){
     bothMove(100);
     Delay(20);
     bothMove(0);
+    
     intake.move(600);
     chain.move(600);
+    
     PidTurnRightTo(90);
     bothMove(-600);
     Delay(140);
@@ -262,6 +264,8 @@ void soloWPRed() {
     Delay(350); 
     chain.move(0);
     intake.move(0);
+    
+    // spit blue ring
     PidTurnTo(-50);
     intake.move(-600);
     Delay(600);
@@ -271,13 +275,13 @@ void soloWPRed() {
     delay(100);
     bothMove(600);
     Delay(400);
-    //Change from 300 to 350
+    
     // Part 2 starts
 
-    // get stake
     chain.move(0);
     clamp.set_value(0);
-    // Part 2 startes
+
+    // get stake
     bothMove(0);
     Delay(150);
     bothMove(0);
@@ -367,7 +371,7 @@ void soloWPBlue() {
     Delay(300);
 
     // go to other side
-    PidTurnTo(140);
+    PidTurnTo(40);
     bothMove(0);
     Delay(40);
     bothMove(600);
@@ -383,26 +387,30 @@ void soloWPBlue() {
     Delay(350); 
     chain.move(0);
     intake.move(0);
-    PidTurnTo(130);
+    
+    // spit red ring
+    PidTurnTo(50);
     intake.move(-600);
     Delay(600);
+    
+    // turn back
     PidTurnTo(90);
     chain.move(600);
     intake.move(600);
     delay(100);
     bothMove(600);
     Delay(400);
-    //Change from 300 to 350
+    
     // Part 2 starts
 
-    // get stake
     chain.move(0);
     clamp.set_value(0);
-    // Part 2 startes
+    
+    // get stake
     bothMove(0);
     Delay(150);
     bothMove(0);
-    PidTurnTo(210);
+    PidTurnTo(330);
     bothMove(-600);
     Delay(400);
     bothMove(0);
@@ -435,7 +443,7 @@ void soloWPBlue() {
     Delay(150);
 
     // touch
-    PidTurnTo(290);
+    PidTurnTo(250);
     bothMove(0);
     brakehold();
     Delay(50);

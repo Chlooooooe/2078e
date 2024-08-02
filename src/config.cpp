@@ -5,7 +5,7 @@ using namespace pros;
 
 Controller cntrl(CONTROLLER_MASTER);
 
-Motor chain(1, MotorGears::green, MotorEncoderUnits::rotations);
+Motor chain(1, MotorGears::blue, MotorEncoderUnits::rotations);
 Motor intake(10, MotorGears::green, MotorEncoderUnits::rotations);
 Motor arm(-2, MotorGears::red, MotorEncoderUnits::rotations);
 MotorGroup left({-11, -12, -13}, MotorGears::blue, MotorEncoderUnits::rotations);
