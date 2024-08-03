@@ -40,7 +40,6 @@ void op(double drive_scale) {
 				}
 				if (detected){
 					chain.move(-127);
-					arm.move(-50);
 				} else{
 					chain.move(127);
 				}
@@ -82,10 +81,8 @@ void op(double drive_scale) {
 		} else if (cntrl.get_digital(DIGITAL_R2)) {
 			arm.move(-127);
 		} else {
-			if (!detected){
-				arm.move(0);
-				arm.set_brake_mode(E_MOTOR_BRAKE_HOLD);
-			}
+			arm.move(0);
+			arm.set_brake_mode(E_MOTOR_BRAKE_HOLD);
 		}
 
 		// arm unlock
