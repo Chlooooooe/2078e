@@ -2,7 +2,6 @@
 #include "pid.h"
 #include "myFunctions.h"
 
-
 void bothMove(int vel){
     left.move_velocity(vel);
     right.move_velocity(vel);
@@ -122,11 +121,7 @@ void mogoRush(){
     chain.move(600);
     arm.move(0);
     bothMove(0);
-
-
-
-
-
+    clamp.set_value(0);
 }
 
 void ringRushRed(){
@@ -134,14 +129,15 @@ void ringRushRed(){
     brakehold(); //Move to wall stake, facing rings
     chain.move(-600);
     bothMove(600);
-    Delay(410);
+    Delay(415);
     chain.move(0);
+    arm.move(-127);
     Delay(200);
-    bothMove(-100);
+    bothMove(-100); 
     arm.move(0);
     Delay(20);
     bothMove(0);
-    PidTurnLeftTo(90);
+    PidTurnLeftTo(85);
     intake.move(600);
     chain.move(600);
 
@@ -154,15 +150,7 @@ void ringRushRed(){
     chain.move(0);
     Delay(80);
     bothMove(-300);
-    Delay(600);
-    for (int i = 0; i<2;i++){
-        right.move_velocity(0);
-        left.move_velocity(-400);
-        Delay(120);
-        left.move_velocity(0);
-        right.move_velocity(-400);
-        Delay(120);
-    }
+    Delay(800);
     arm.move(-127);
     bothMove(0);
     clamp.set_value(1);
@@ -177,6 +165,7 @@ void ringRushRed(){
     bothMove(-100);
     Delay(40);
     chain.move(0);
+    
     PidTurnTo(160);
     chain.move(600);
     bothMove(400);
@@ -190,22 +179,25 @@ void ringRushRed(){
     bothMove(-100);
     Delay(40);
     chain.move(0);
-    PidTurnTo(160);
+    left.move_velocity(600);
+    right.move_velocity(-600);
+    Delay(360);
+    bothMove(0);
     intake.move(-600);
     Delay(600);
-    chain.move(600);
     PidTurnTo(78);
+    chain.move(600);
     intake.move(600);
     bothMove(600);
-    Delay(500);
+    Delay(400);
     bothMove(-600);
-    Delay(500);
+    Delay(400);
     PidTurnTo(0);
     bothMove(600);
     Delay(600);
     arm.move(600);
     bothMove(0);
-    
+    clamp.set_value(0);
 
 }
 
@@ -327,7 +319,7 @@ void soloWPRed() {
     arm.move(127);
     Delay(200);
     bothMove(0);
-    
+    clamp.set_value(0);
     arm.set_brake_mode(E_MOTOR_BRAKE_HOLD);
 
 }
@@ -454,6 +446,7 @@ void soloWPBlue() {
     bothMove(0);
     
     arm.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+    clamp.set_value(0);
 
 }
 
@@ -462,7 +455,7 @@ void ringRushBlue(){
     brakehold(); //Move to wall stake, facing rings
     chain.move(-600);
     bothMove(600);
-    Delay(410);
+    Delay(425);
     chain.move(0);
     Delay(200);
     bothMove(-90);
@@ -470,6 +463,8 @@ void ringRushBlue(){
     Delay(20);
     bothMove(0);
     PidTurnRightTo(-85);
+    bothMove(0);
+    Delay(40);
     intake.move(600);
     chain.move(600);
 
@@ -478,7 +473,7 @@ void ringRushBlue(){
     bothMove(0);
     Delay(150);
     
-    PidTurnTo(55,armIntake); //get mogo
+    PidTurnTo(62,armIntake); //get mogo
     chain.move(0);
     Delay(80);
     bothMove(-300);
@@ -512,27 +507,34 @@ void ringRushBlue(){
     bothMove(0);
     PidTurnTo(-78);
     chain.move(600);
-    bothMove(600);
-    Delay(800);
-    intake.move(0);
-    bothMove(-100);
-    Delay(40);
-    chain.move(0);
-    PidTurnTo(-160);
-    intake.move(-600);
-    Delay(600);
-    chain.move(600);
-    PidTurnTo(-78);
-    intake.move(600);
-    bothMove(600);
-    Delay(500);
-    bothMove(-600);
-    Delay(500);
-    PidTurnTo(0);
-    bothMove(600);
-    Delay(600);
-    arm.move(600);
-    bothMove(0);
+    // bothMove(600);
+    // Delay(800);
+    // intake.move(0);
+    // bothMove(-100);
+    // Delay(40);
+    // chain.move(0);
+    // PidTurnTo(-160);
+    // intake.move(-600);
+    // Delay(600);
+    // chain.move(600);
+    // PidTurnTo(-78);
+    // intake.move(600);
     
+    // bothMove(600);
+    // Delay(400);
+    // bothMove(-600);
+    // Delay(400);
+    // PidTurnTo(0);
+    // bothMove(600);
+    // Delay(800);
+    // arm.move(600);
+    // bothMove(0);
 
+    Delay(2000);
+    chain.move(-127);
+    Delay(500);
+    chain.move(127);
+    Delay(1500);
+
+    clamp.set_value(0);
 }

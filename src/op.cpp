@@ -35,30 +35,32 @@ void op(double drive_scale) {
 		// intake and chain
 		if (cntrl.get_digital(DIGITAL_L1)) {
 			if (armIntake){
-				if (armSensor.get()<60){
+				if (armSensor.get() < 60){
 					detected = true;
 				}
 				if (detected){
-					chain_count++;
-					chain.move(-100);
-					
+					chain.move(-127);
+					arm.move(-50);
 				} else{
-					chain.move(100);
-				}
-				if(chain_count > 400){
-					chain_count = 0;
-					detected = false;
+					chain.move(127);
 				}
 			} else{
-				chain.move(100);
+				chain.move(127);
 			}
 			intake.move(127);
 		} else if (cntrl.get_digital(DIGITAL_L2)) {
 			intake.move(-127);
-			chain.move(-100);
+			chain.move(-127);
 		} else {
 			intake.move(0);
 			chain.move(0);
+		}
+		if (detected){
+			chain_count++;
+		}
+		if(chain_count > 400){
+			chain_count = 0;
+			detected = false;
 		}
 
 		
@@ -80,8 +82,10 @@ void op(double drive_scale) {
 		} else if (cntrl.get_digital(DIGITAL_R2)) {
 			arm.move(-127);
 		} else {
-			arm.move(0);
-			arm.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+			if (!detected){
+				arm.move(0);
+				arm.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+			}
 		}
 
 		// arm unlock
@@ -89,18 +93,17 @@ void op(double drive_scale) {
 			arm.set_brake_mode(E_MOTOR_BRAKE_COAST);
 		}
 
-		// hook 
 		if (cntrl.get_digital(DIGITAL_B)) {
 			if (armIntake) {
 				armIntake = false;
-				cntrl.set_text(0, 0, "arm");
+				cntrl.set_text(0, 0, "mogo");
 			} else {
 				armIntake = true;
-				cntrl.set_text(0, 0, "mogo");
+				cntrl.set_text(0, 0, "arm");
 			}
+			pros::delay(300);
 		}
 
-		// chain reverse
 		pros::delay(5);
 
 
