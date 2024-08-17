@@ -8,25 +8,28 @@
 #include <tuple>
 
 
-double estimate_time(double x1,double  y1,double  x2,double  y2){
-	return std::pow((std::pow((x2-x1),2) + std::pow((y2-y1),2)),0.5)/7.77544182;
-}
 
 std::tuple<std::array<double, 16>, std::array<double, 16>, std::array<double, 4>, std::array<double, 4>> constructMatrix(double x1, double y1, double dx1, double dy1, double time1, double x2, double y2, double dx2, double dy2, double time2){
+    
     std::array<double, 16> matrixX4x4 =  {1, time1, time1*time1, time1*time1*time1, 1,time2,time2*time2,time2*time2*time2,0,1,2*time1,3*time1*time1,0,1,2*time2,3*time2*time2};
     std::array<double, 16> matrixY4x4 =  {1, time1, time1*time1, time1*time1*time1, 1,time2,time2*time2,time2*time2*time2,0,1,2*time1,3*time1*time1,0,1,2*time2,3*time2*time2};
+    
     std::array<double, 4> matrixX4x1 = {x1, x2, dx1, dx2};
     std::array<double, 4> matrixY4x1 = {y1, y2, dy1, dy2};
-	return std::make_tuple(matrixX4x4,matrixY4x4,matrixX4x1,matrixY4x1);
+	
+    
+    return std::make_tuple(matrixX4x4,matrixY4x4,matrixX4x1,matrixY4x1);
 }
 
-std::array<double, 16> InvertMatrix(const std::array<double, 16>& m){
+
+
+std::array<double, 16> InvertMatrix(const std::array<double, 16>& m){       // Just converts a 4x4 matrix in a format of 01 02 03 04 11 12 13 14 21 22 23 24 31 32 33 34 format (aka just length 16 array) into it's inverse.
     std::array<double, 16> invOut;
 	std::array<double, 16> inv; 
 	double det;
     int i;
 
-    inv[0] = m[5]  * m[10] * m[15] - 
+    inv[0] = m[5]  * m[10] * m[15] -                                        //formula for each element in the inverse
              m[5]  * m[11] * m[14] - 
              m[9]  * m[6]  * m[15] + 
              m[9]  * m[7]  * m[14] +
@@ -138,22 +141,57 @@ std::array<double, 16> InvertMatrix(const std::array<double, 16>& m){
               m[8] * m[1] * m[6] - 
               m[8] * m[2] * m[5];
 
-    det = m[0] * inv[0] + m[1] * inv[4] + m[2] * inv[8] + m[3] * inv[12];
+    det = m[0] * inv[0] + m[1] * inv[4] + m[2] * inv[8] + m[3] * inv[12];   //determinant, that's just how you calculate it ;-;
 
-    det = 1.0 / det;
+    det = 1.0 / det;                                                        //search up inverse matrix formula and you'll understand why you need to do this
 
-    for (i = 0; i < 16; i++){
+    for (i = 0; i < 16; i++){                                               //1/inv * matrix, anyways this loops through all 16 elements
         invOut[i] = inv[i] * det;
 	}
 	return invOut;
 }
 
-std::array<double, 4> CalculateLine(std::array<double, 4>& m, std::array<double, 16>& bigMatrix){
+
+
+std::tuple<double, double> updateSlope(double dx, double dy) {                  //Update slope is like finding a unit vector, but the unit vector's length is 8.639 (1/10 speed of the robot), instead of 1
+                                                                                //This allows us to put any dx, dy when inputting points without worrying about 
+    double slope = 8.6393798;//Unit vector magnitude                            //Why this? Form my testing, this gives tight, but not too tight turns. So- using 1 makes the turn on a scale of ~2 inches, and this is ~1-2 feet, while 86 is more like a 20 feet turn (most of the time in circle) Go to Dm for documentation.
+    
+    slope /= std::pow((std::pow((dx),2) + std::pow((dy),2)),0.5);    //Finds the scalar. Math and formula representation in Discord documentation
+    
+    
+    return std::make_tuple(dx*slope, dy*slope);                         //Scales and returns dx, dy
+}
+
+
+
+double findRobotHeading(double dy, double dx) { //Returns 
+    double angle;
+
+    if (dx == 0.0)                              //Just a lot of logic, it's in docs if you need to know how it's done.
+    {
+        if (dy > 0.0) 
+        {angle = 90;}
+        else 
+        {angle = 270;}
+    }
+    else{angle = fabs((atan(dy/dx))*180/M_PI-90);}
+
+    if (dx<0) {angle += 180;}
+
+
+    return angle;
+
+}
+
+
+
+std::array<double, 4> CalculateLine(std::array<double, 4>& m, std::array<double, 16>& bigMatrix){ //It's another way to say "I am multiplying two matrixes together". A 4x1 with a 4x4
 	std::array<double, 4> outputMatrix;
 	double sum = 0.0;
-	for (int i = 0; i < 4; i++){
+	for (int i = 0; i < 4; i++){                //loops through the four rows of 4x4
 		sum = 0.0;
-		for (int j = 0; j < 4; j++){
+		for (int j = 0; j < 4; j++){            //loops through the columns 4x1 and 4x4
 			sum += bigMatrix[4*i + j] * m[j];
 		}
 		outputMatrix[i] = sum;
@@ -161,29 +199,10 @@ std::array<double, 4> CalculateLine(std::array<double, 4>& m, std::array<double,
 	return outputMatrix;
 }
 
-std::tuple<double, double> updateSlope(double dx, double dy) {
-	double slope = 8.6393798;
-    slope /= std::pow((std::pow((dx),2) + std::pow((dy),2)),0.5);
-    return std::make_tuple(dx*slope, dy*slope);
-}
 
-double findAngle(double dy, double dx) {
-    double angle;
-    if (dx == 0.0){
-        if (dy > 0.0){
-            angle = 0;
-        }
-        else{
-            angle = 180;
-        }
-    }
-    else{
-        angle = fabs((atan(dy/dx))*180/3.14159265-90);
-    }
-    if(dx<0){
-        angle += 180;
-    }
-    return angle;
+
+double estimate_time(double x1,double  y1,double  x2,double  y2){           //Estimation of time required to drive to the point; given the two points.
+	return std::pow((std::pow((x2-x1),2) + std::pow((y2-y1),2)),0.5)/7.77544182;
 }
 
 namespace path {
@@ -269,7 +288,7 @@ namespace path {
                 i *= 0.8;
                 double x = lineX[i-4] + lineX[i-3]*time + lineX[i-2]*time*time + lineX[i-1]*time*time*time;
                 double y = lineY[i-4] + lineY[i-3]*time + lineY[i-2]*time*time + lineY[i-1]*time*time*time;
-                return std::make_tuple(x,y,findAngle((lineY[i-3] + 2*lineY[i-2]*time + 3*lineY[i-1]*time*time),(lineX[i-3] + 2*lineX[i-2]*time + 3*lineX[i-1]*time*time)));
+                return std::make_tuple(x,y,findRobotHeading((lineY[i-3] + 2*lineY[i-2]*time + 3*lineY[i-1]*time*time),(lineX[i-3] + 2*lineX[i-2]*time + 3*lineX[i-1]*time*time)));
             }
 
 
