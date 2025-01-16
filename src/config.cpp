@@ -5,11 +5,11 @@ using namespace pros;
 
 Controller cntrl(CONTROLLER_MASTER);
 
-Motor chain(1, MotorGears::blue, MotorEncoderUnits::rotations);
-Motor intake(10, MotorGears::green, MotorEncoderUnits::rotations);
+Motor chain(17, MotorGears::blue, MotorEncoderUnits::rotations);
+Motor intake(20, MotorGears::green, MotorEncoderUnits::rotations);
 Motor arm(-2, MotorGears::red, MotorEncoderUnits::rotations);
-MotorGroup left({-11, -12, -13}, MotorGears::blue, MotorEncoderUnits::rotations);
-MotorGroup right({18, 19, 20}, MotorGears::blue, MotorEncoderUnits::rotations);
+MotorGroup left({-16, -15, -14}, MotorGears::blue, MotorEncoderUnits::rotations);
+MotorGroup right({13, 12, 11}, MotorGears::blue, MotorEncoderUnits::rotations);
 adi::DigitalOut clamp('H');
 Imu inertial(14);
 adi::Port hook({15, 'h'}, E_ADI_DIGITAL_OUT);
